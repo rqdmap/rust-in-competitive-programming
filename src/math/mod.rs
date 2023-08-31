@@ -1,2 +1,1 @@
-mod number_theory;
-pub use number_theory::*;
+pub mod number_theory;

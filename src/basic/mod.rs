@@ -1,3 +1,2 @@
-mod io;
-pub use crate::input;
+pub mod io;
 
