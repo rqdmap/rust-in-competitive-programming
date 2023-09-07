@@ -2,7 +2,7 @@
 
 ## 多文件打包
 
-基于[rqdmap/rust-sourcebundler](https://github.com/rqdmap/rust-sourcebundler)提供的Rust功能库, 使用Cargo构建脚本即可将项目下的多个文件打包成单一Rust文件, 便于在OJ上提交代码.
+基于[rqdmap/rust-bundler](https://github.com/rqdmap/rust-bundler)提供的Rust功能库, 使用Cargo构建脚本即可将项目下的多个文件打包成单一Rust文件, 便于在OJ上提交代码.
 
 为了使用打包功能, 维护如下所示的项目文件结构:
 

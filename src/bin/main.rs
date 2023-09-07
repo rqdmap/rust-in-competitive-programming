@@ -1,19 +1,8 @@
 use rust_in_competitive_programming::*;
 
+struct Solution { }
 fn main() {
-    let content = stdin_to_string();
-    let mut inp = Parser::new(&content);
-
-    let t = inp.read();
-    let mut vec: Vec<Vec<String>> = Vec::new();
-    for _t in 1..= t {
-        let n = inp.read();
-        let mut v: Vec<String> = Vec::new();
-        for _i in 0..n {
-            let x = inp.read();
-            v.push(x);
-        }
-        vec.push(v);
-    }
-    println!("{:?}", vec);
+    println!("{}", comb(5, 2));
+    println!("{}", comb_p(5, 2, 1_000_000_007));
+    println!("{}", comb_fast(5, 2, 1_000_000_007));
 }
