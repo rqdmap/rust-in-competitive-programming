@@ -1,19 +1,31 @@
+use super::traits::*;
+
 pub fn gcd(a: u64, b: u64) -> u64 {
-    if b == 0 { return a; }
+    if b == 0 {
+        return a;
+    }
     return gcd(b, a % b);
 }
 
 pub fn exgcd(a: i64, b: i64) -> (i64, i64) {
-    if b == 0 { return (1, 0); }
+    if b == 0 {
+        return (1, 0);
+    }
     let (x, y) = exgcd(b, a % b);
     return (y, x - a / b * y);
 }
 
-pub fn quick_pow(mut a: u64, mut b: u64, p: u64) -> u64 {
-    let mut ans = 1;
+pub fn quick_pow<T>(a: T, mut b: u64, p: u64) -> T
+where
+    T: Mul<Output = T> + Rem<u64, Output = T> + One + Clone,
+{
+    let mut ans = a.one();
+    let mut a = a.clone();
     while b > 0 {
-        if b & 1 == 1 { ans = ans * a % p; }
-        a = a * a % p;
+        if b & 1 == 1 {
+            ans = ans * a.clone() % p;
+        }
+        a = a.clone() * a.clone() % p;
         b >>= 1;
     }
     return ans;
@@ -27,9 +39,13 @@ pub fn euler_prime(n: u32) -> Vec<u32> {
             ans.push(i);
         }
         for j in 0..ans.len() {
-            if i * ans[j] > n { break; }
+            if i * ans[j] > n {
+                break;
+            }
             prime[(i * ans[j]) as usize] = false;
-            if i % ans[j] == 0 { break; }
+            if i % ans[j] == 0 {
+                break;
+            }
         }
     }
     return ans;
@@ -79,7 +95,7 @@ pub fn comb_fast(n: u64, m: u64, p: u64) -> u64 {
     let mut ans = 1;
     for i in 1..=m.min(n - m) {
         ans = ans * (n - i + 1) % p;
-        ans = ans * unsafe {COMB_FAST_INV.as_ref().unwrap()[i as usize] } % p;
+        ans = ans * unsafe { COMB_FAST_INV.as_ref().unwrap()[i as usize] } % p;
     }
     return ans;
 }
@@ -119,7 +135,12 @@ mod number_theory_tests {
         let p = 1e9 as u64 + 7;
         let n = 5000;
         for m in 1..=n {
-            assert!(comb_fast(n, m, p) == comb_p(n, m, p), "Mismatch: n={}, m={}", n, m);
+            assert!(
+                comb_fast(n, m, p) == comb_p(n, m, p),
+                "Mismatch: n={}, m={}",
+                n,
+                m
+            );
         }
     }
 
@@ -128,5 +149,4 @@ mod number_theory_tests {
     fn comb_test_p_bigger_than_u32() {
         comb_fast(10000, 5000, 1e18 as u64 + 7);
     }
-
 }
