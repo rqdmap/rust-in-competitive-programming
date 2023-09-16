@@ -3,9 +3,9 @@ use std::collections::*;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Star {
-    to: usize,
-    next: usize,
-    w: i64,
+    pub to: usize,
+    pub next: usize,
+    pub w: i64,
 }
 
 /// # Example
