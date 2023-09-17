@@ -7,6 +7,8 @@ fn main() {
         true,
     );
 
+    bundler.set_banner("src/misc/banner.rs");
+
     bundler.run();
 }
 
