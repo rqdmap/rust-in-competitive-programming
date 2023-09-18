@@ -111,6 +111,18 @@ impl Comb {
 }
 
 /// 计算排列数 A(n, m)
+/// NOTE: 溢出u64时直接panic
+pub fn perm_raw(mut n: u64, m: u64) -> u64 {
+    assert!(n >= m);
+    let mut ans: u64 = 1;
+    for _ in 1..=m {
+        ans = ans.checked_mul(n).unwrap();
+        n -= 1;
+    }
+    return ans.try_into().unwrap();
+}
+
+/// 计算排列数 A(n, m)
 pub fn perm(mut n: u64, m: u64, p: u32) -> u32 {
     assert!(n >= m);
     let mut ans = 1;
@@ -140,6 +152,66 @@ impl Perm {
         ).try_into().unwrap();
     }
 }
+
+mod perm_transfrom_mod {
+    pub fn dfs<T: FnMut(&[usize])>(vec: &mut [usize], now: usize, foo: &mut T) {
+        if now == vec.len() {
+            foo(vec);
+            return;
+        }
+        for i in now..vec.len() {
+            vec.swap(now, i);
+            dfs(vec, now + 1, foo);
+            vec.swap(now, i);
+        }
+    }
+}
+
+pub fn iter_all_permutations<T: FnMut(&[usize])>(vec: &[usize], foo: &mut T) {
+    let mut tmp = vec.to_vec();
+    perm_transfrom_mod::dfs(&mut tmp, 0, foo);
+}
+
+pub fn get_all_permutations(vec: &[usize]) -> Vec<Vec<usize>> {
+    let mut ans: Vec<Vec<usize>> = vec![];
+    iter_all_permutations(vec, &mut |vec: &[usize]| ans.push(vec.to_vec()));
+    return ans;
+}
+
+/// Time complexity: O(n)
+///
+/// # Example
+/// ```
+/// use rust_in_competitive_programming::get_next_permtation;
+/// assert_eq!(get_next_permtation(&vec![1, 2, 3]), vec![1, 3, 2]);
+/// assert_eq!(get_next_permtation(&vec![3, 2, 1]), vec![1, 2, 3]);
+/// ```
+pub fn get_next_permtation(vec: &Vec<usize>) -> Vec<usize> {
+    let n = vec.len();
+    for i in (0..n - 1).rev() {
+        if vec[i] < vec[i + 1] {
+            let mut ans = vec[0..=i].to_vec();
+            let mut tmp = vec[i+1..].to_vec();
+            for j in (0..tmp.len()).rev() {
+                if tmp[j] > ans[i] {
+                    let x = tmp[j];
+                    tmp[j] = ans[i];
+                    ans[i] = x;
+                    break;
+                }
+            }
+            tmp.reverse();
+            ans.append(&mut tmp);
+            return ans;
+        }
+    }
+    let mut ans = vec.to_vec();
+    ans.reverse();
+    return ans;
+}
+
+// pub fn get_prev_permtation<T: Clone>(vec: &Vec<T>) -> Vec<T> {
+// }
 
 
 #[cfg(test)]
@@ -185,3 +257,4 @@ mod comb_tests {
         }
     }
 }
+
